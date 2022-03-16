@@ -1,9 +1,9 @@
-import { GuidFactory } from "../utils/GuidFactory";
-import { getNewLogger } from "../utils/LogFactory";
+import { GuidFactory } from "../utils/guidFactory";
+import { getNewLogger } from "../utils/logFactory";
 import { webPackPromise } from "../utils/webpack.promise";
-import { MacroManager, readMacroAsync } from "../utils/macro/MarcoManager";
+import { MacroManager, readMacroAsync } from "../utils/macro/macroManager";
 
-import { getRoomBuildConfiguration } from "../utils/macro/RoomConfigurationBuilder";
+import { getRoomBuildConfiguration } from "../utils/macro/roomConfigurationBuilder";
 
 const publishGuid = GuidFactory.newGuid();
 const log = getNewLogger(publishGuid);
