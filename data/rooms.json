@@ -1,0 +1,9 @@
+[
+    {
+        "Deploy": true,
+        "NormalizedName": "Room beautiful name",
+        "Ip": "1.1.1.1",
+        "CiscoUser": "JhonDoe",
+        "CiscoPassword": "SuperSecretPassword"
+    }
+]
