@@ -1,9 +1,13 @@
 [
     {
-        "Deploy": true,
-        "NormalizedName": "Room beautiful name",
-        "Ip": "1.1.1.1",
-        "CiscoUser": "JhonDoe",
-        "CiscoPassword": "SuperSecretPassword"
+        "deploy": true,
+        "name": "Room beautiful name",
+        "normalizedName": "room_name_or_id",
+        "ip": "1.1.1.1",
+        "ciscoUser": "JhonDoe",
+        "ciscoPassword": "SuperSecretPassword",
+        "additionalDetails": {
+            
+        }
     }
 ]
