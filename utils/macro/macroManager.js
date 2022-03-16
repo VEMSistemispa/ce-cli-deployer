@@ -22,9 +22,6 @@ class MacroManager {
   }
 
   async sendMacroAsync(name, macro) {
-    // TODO: gestire whitelist hostname sala, nel caso in cui l'host name non sia valido
-    // viene sollevato un: URL not allowed by rule
-
     const xapi = jsaxpi.connect("wss://" + this.ip, {
       username: this.user,
       password: this.pwd,

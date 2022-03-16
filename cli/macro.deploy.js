@@ -2,63 +2,81 @@ import { GuidFactory } from "../utils/guidFactory";
 import { getNewLogger } from "../utils/logFactory";
 import { webPackPromise } from "../utils/webpack.promise";
 import { MacroManager, readMacroAsync } from "../utils/macro/macroManager";
+import * as path from "path";
 
-import { getRoomBuildConfiguration } from "../utils/macro/roomConfigurationBuilder";
+import {
+  getConfiguration,
+  getCustomRoomEnvironmentData,
+} from "../utils/macro/roomConfigurationBuilder";
 
 const publishGuid = GuidFactory.newGuid();
 const log = getNewLogger(publishGuid);
 
-const createMacro = async (e) => {
-  log.info('Runnining webpack for: %s', e.roomInfo.NormalizedName);
-  const stats = await webPackPromise(e.c);
+const createMacro = async (roomConfiguration, roomName) => {
+  log.info("Runnining webpack for: %s", roomName);
+  const stats = await webPackPromise(roomConfiguration);
 
   if (stats.hasErrors()) {
     console.log(stats);
     return false;
   }
 
-  log.info('Webpack script was successfull for: %s', e.roomInfo.NormalizedName);
+  log.info("Webpack script was successfull for: %s", roomName);
   return true;
 };
 
-const processMacroAsync = async (e) => {
-  const { Ip, CiscoUser, CiscoPassword, NormalizedName, path } = e.roomInfo;
+const processMacroAsync = async (
+  { ip, ciscoUser, ciscoPassword, normalizedName },
+  path
+) => {
   const macro = await readMacroAsync(path);
-  const m = new MacroManager(Ip, CiscoUser, CiscoPassword, log);
 
-  await m.sendMacroAsync("RoomAutomation_" + NormalizedName, macro);
+  const m = new MacroManager(ip, ciscoUser, ciscoPassword, log);
+
+  await m.sendMacroAsync("AutomaticDeploy_" + normalizedName, macro);
   await m.restartMacrosAsync();
 
   return;
 };
 
 const process = async (options) => {
-  log.info('Process started');
+  log.info("Process started");
 
-  const rooms = options.rooms;
-  
-  log.info('Get room configurations');
-  const confs = getRoomBuildConfiguration(rooms, publishGuid, options.minify);
+  const rooms = options.rooms.filter((e) => e.deploy);
 
-  log.info('Rooms to configure: %o', rooms.map(e => e.NormalizedName));
+  log.info(
+    "Rooms to configure: %o",
+    rooms.map((e) => e.name)
+  );
 
-  for (let index = 0; index < confs.length; index++) {
-    const element = confs[index];
-    let name = element.roomInfo.NormalizedName;
-    log.info('Processing room: %s', name);
+  for (let i = 0; i < rooms.length; i++) {
+    const element = rooms[i];
+
+    log.info("Processing room: %s", element.name);
+
+    const p = path.resolve(__dirname, "../dist/" + element.normalizedName);
+    const fileName = `main.${publishGuid}.js`;
+
+    var conf = getConfiguration(
+      {
+        fileName: fileName,
+        path: p,
+        minify: options.minify,
+      },
+      getCustomRoomEnvironmentData(element, publishGuid)
+    );
 
     // create macro at file system
-    await createMacro(element);
-    
+    await createMacro(conf, element.name);
 
     if (options.publish) {
-      log.info('Publishing room %s on the remote', name);
+      log.info("Publishing room %s on the remote", element.name);
       // publish macro on remote
-      await processMacroAsync(element);
-      log.info('Done publishing room %s on the remote', name);
+      await processMacroAsync(element, path.resolve(p, fileName));
+      log.info("Done publishing room %s on the remote", element.name);
     }
-    
-    log.info('Done processing %s', name);
+
+    log.info("Done processing %s", element.name);
   }
 };
 

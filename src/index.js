@@ -1,25 +1,32 @@
 import xapi from "xapi";
 import {
   PUBLISH_IDENTIFIER,
+  AMAZING_FEATURE_ENABLED_ONE,
+  AMAZING_FEATURE_ENABLED_TWO,
+  ROOM_NAME,
 } from "./EnvironmentData";
 
-async function OnPanelClickAsync(event) {
-  console.log("PANEL OPENED");
-  switch (event.PanelId) {
-    
+const displayRoomOsAlert = (title, text, duration = 10) => {
+  xapi.Command.UserInterface.Message.Alert.Display({
+    Title: title,
+    Text: text,
+    Duration: duration,
+  });
+};
+
+setInterval(() => {
+  // We don't see it because we pass field2 equal to false
+  if (AMAZING_FEATURE_ENABLED_TWO) {
+    displayRoomOsAlert(ROOM_NAME, "The feature number two is disabled");
   }
-}
+}, 5000);
 
-async function OnButtonClickedAsync(event) {
-  if (event.Type !== "clicked") return;
-
-  switch (event.WidgetId) {
-    
+setInterval(() => {
+  // We see it because we pass field1 equal to true
+  if (AMAZING_FEATURE_ENABLED_ONE) {
+    displayRoomOsAlert(ROOM_NAME, "The feature number one is enabled!!!");
   }
-}
+}, 5000);
 
-xapi.event.on("UserInterface Extensions Panel Clicked", OnPanelClickAsync);
-xapi.Event.UserInterface.Extensions.Widget.Action.on(OnReleaseSliderValueAsync);
-xapi.Event.UserInterface.Extensions.Widget.Action.on(OnButtonClickedAsync);
-
+// we log GUID so we know wich version of the script is published on the telepresence station
 console.log("VERSION_PUBLISHED", PUBLISH_IDENTIFIER);

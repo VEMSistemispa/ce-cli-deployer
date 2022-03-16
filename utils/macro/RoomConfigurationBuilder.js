@@ -1,42 +1,33 @@
-const conf = require("../../webpack.config");
-const { EnvironmentPlugin } = require("webpack");
-const path = require("path");
+import { EnvironmentPlugin } from "webpack";
 
-const roomData = (rooms, publishGuid, minify) => {
-  const nodeEnvironment = "production";
-
-  let confs = rooms
-    .filter((e) => e.Deploy)
-    .map((e) => {
-      const p = path.resolve(
-        __dirname,
-        "../../dist/" + e.Room.split("/").join("__")
-      );
-      const fileName = `main.${publishGuid}.js`;
-      return {
-        c: {
-          ...conf,
-          output: {
-            filename: fileName,
-            path: p,
-          },
-          plugins: [
-            new EnvironmentPlugin({
-              NODE_ENV: nodeEnvironment, // use 'development' unless process.env.NODE_ENV is defined
-              PUBLISH_IDENTIFIER: publishGuid,
-              ROOM_NAME: e.NormalizedName,
-            }),
-          ],
-        },
-        roomInfo: {
-          ...e,
-          path: path.resolve(p, fileName),
-        },
-      };
-    });
-  return confs;
+export const getConfiguration = (
+  { path, fileName, minify },
+  envConfiguration
+) => {
+  return {
+    mode: "production",
+    entry: "./src/index.js",
+    output: {
+      filename: fileName,
+      path: path,
+    },
+    externalsType: "commonjs",
+    externals: {
+      xapi: "xapi",
+    },
+    plugins: [new EnvironmentPlugin(envConfiguration)],
+    optimization: {
+      minimize: minify,
+    },
+  };
 };
 
-module.exports = {
-  getRoomBuildConfiguration: roomData,
-};
+// inside environment configuration we can put every custom field we want
+export const  getCustomRoomEnvironmentData = (element, publishGuid) => {
+  return {
+    PUBLISH_IDENTIFIER: publishGuid,
+    ROOM_NAME: element.normalizedName,
+    FIELD_1: element.additionalDetails.field1,
+    FIELD_2: element.additionalDetails.field2,
+  };
+}
