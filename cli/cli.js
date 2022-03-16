@@ -6,9 +6,16 @@ import path from "path";
 function parseArgumentsIntoOptions(rawArgs) {
   const args = arg(
     {
+      // skips everything and keep default values defined below
       "--yes": Boolean,
+
+      // if set to true it publish the macro to the remote station
       "--publish": Boolean,
+
+      // if set to true minify the code
       "--minify": Boolean,
+
+      // file json with the stations infos you want to publish on
       "--source": String,
       "-s": "--source",
       "-m": "--minify",
@@ -20,9 +27,8 @@ function parseArgumentsIntoOptions(rawArgs) {
   return {
     skip: args["--yes"] || false,
     publish: args["--publish"] || false,
-    minify: args["--minify"] || true,
+    minify: args["--minify"] || false,
     source: args["--source"] || false,
-    //template: args._[0],
   };
 }
 
@@ -43,13 +49,23 @@ async function promptForMissingOptions(options) {
     });
   }
 
-  if (!options.source) {
+  if (!options.publish) {
     questions.push({
       type: "confirm",
       name: "publish",
-      message: "Publish script to the remote",
+      message: "Would you like to publish script to the remote",
       default: false,
     });
+  }
+
+  if (!options.minify) {
+    questions.push({
+      type: "confirm",
+      name: "minify",
+      message: "Would you like to minify the script?",
+      default: false,
+    });
+
   }
 
   const answers = await inquirer.prompt(questions);
@@ -58,6 +74,7 @@ async function promptForMissingOptions(options) {
     ...options,
     source: options.source || answers.source,
     publish: options.publish || answers.publish,
+    minify: options.minify || answers.minify
   };
 }
 
