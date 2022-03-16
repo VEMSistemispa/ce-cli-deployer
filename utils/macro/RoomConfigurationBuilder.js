@@ -1,14 +1,17 @@
 const conf = require("../../webpack.config");
-const {EnvironmentPlugin} = require("webpack");
+const { EnvironmentPlugin } = require("webpack");
 const path = require("path");
 
+const roomData = (rooms, publishGuid, minify) => {
+  const nodeEnvironment = "production";
 
-const roomData = (rooms, publishGuid, nodeEnvironment) => {
-  nodeEnvironment = nodeEnvironment || 'production';
   let confs = rooms
     .filter((e) => e.Deploy)
     .map((e) => {
-      const p =  path.resolve(__dirname, "../../dist/" + e.Room.split("/").join("__"));
+      const p = path.resolve(
+        __dirname,
+        "../../dist/" + e.Room.split("/").join("__")
+      );
       const fileName = `main.${publishGuid}.js`;
       return {
         c: {
@@ -21,7 +24,7 @@ const roomData = (rooms, publishGuid, nodeEnvironment) => {
             new EnvironmentPlugin({
               NODE_ENV: nodeEnvironment, // use 'development' unless process.env.NODE_ENV is defined
               PUBLISH_IDENTIFIER: publishGuid,
-              ROOM_NAME: e.NormalizedName
+              ROOM_NAME: e.NormalizedName,
             }),
           ],
         },
@@ -31,10 +34,9 @@ const roomData = (rooms, publishGuid, nodeEnvironment) => {
         },
       };
     });
-    return confs;
+  return confs;
 };
 
-
 module.exports = {
-    getRoomBuildConfiguration: roomData
-}
+  getRoomBuildConfiguration: roomData,
+};

@@ -38,7 +38,7 @@ const process = async (options) => {
   const rooms = options.rooms;
   
   log.info('Get room configurations');
-  const confs = getRoomBuildConfiguration(rooms, publishGuid, null, /*per ora non utilizzato*/options.minify);
+  const confs = getRoomBuildConfiguration(rooms, publishGuid, options.minify);
 
   log.info('Rooms to configure: %o', rooms.map(e => e.NormalizedName));
 
