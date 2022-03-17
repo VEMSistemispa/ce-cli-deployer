@@ -22,12 +22,3 @@ export const getConfiguration = (
   };
 };
 
-// inside environment configuration we can put every custom field we want
-export const  getCustomRoomEnvironmentData = (element, publishGuid) => {
-  return {
-    PUBLISH_IDENTIFIER: publishGuid,
-    ROOM_NAME: element.normalizedName,
-    FIELD_1: element.additionalDetails.field1,
-    FIELD_2: element.additionalDetails.field2,
-  };
-}
