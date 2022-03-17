@@ -7,7 +7,7 @@ import * as path from "path";
 import {
   getConfiguration,
 } from "../utils/macro/roomConfigurationBuilder";
-import { getCustomRoomEnvironmentData } from "../src/customEnvironmentData";
+import { getCustomRoomEnvironmentData } from "../src/EnvironmentData";
 
 const publishGuid = GuidFactory.newGuid();
 const log = getNewLogger(publishGuid);

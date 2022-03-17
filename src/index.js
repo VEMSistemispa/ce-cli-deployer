@@ -4,7 +4,7 @@ import {
   AMAZING_FEATURE_ENABLED_ONE,
   AMAZING_FEATURE_ENABLED_TWO,
   ROOM_NAME,
-} from "./EnvironmentData";
+} from "./environmentData";
 
 const displayRoomOsAlert = (title, text, duration = 10) => {
   xapi.Command.UserInterface.Message.Alert.Display({
