@@ -1,14 +1,41 @@
 [
     {
         "deploy": true,
-        "name": "Room beautiful name",
-        "normalizedName": "room_name_or_id",
+        "name": "Room beautiful name 0",
+        "normalizedName": "room_name_or_id_0",
         "ip": "1.1.1.1",
         "ciscoUser": "JhonDoe",
         "ciscoPassword": "SuperSecretPassword",
         "additionalDetails": {
             "field1": true,
             "field2": false
+        }
+    },
+    {
+        "deploy": true,
+        "name": "Room beautiful name 1",
+        "normalizedName": "room_name_or_id_1",
+        "ip": "1.1.1.1",
+        "ciscoUser": "JhonDoe",
+        "ciscoPassword": "SuperSecretPassword",
+        "additionalDetails": {
+            "field1": true,
+            "field2": false
+        }
+    },
+    {
+        "deploy": false,
+        "name": "Room beautiful name 2",
+        "normalizedName": "room_name_or_id_2",
+        "ip": "1.1.1.1",
+        "ciscoUser": "JhonDoe",
+        "ciscoPassword": "SuperSecretPassword",
+        "additionalDetails": {
+            "field1": true,
+            "field2": false,
+            "field3": 1458,
+            "field4": "chairs"
+            
         }
     }
 ]

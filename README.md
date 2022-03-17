@@ -37,7 +37,7 @@ open cmd:
     cd ce-cli-deployer
     yarn install
 
-> NB: if you don't have yarn installed you may follow [this guide](https://yarnpkg.com/getting-started/install) to install it
+> If you don't have yarn installed you may follow [this guide](https://yarnpkg.com/getting-started/install) to install it
 
 To start the project after installing the packages with yarn:
 
@@ -57,11 +57,13 @@ The repo provide the structure to develop your own macro. The folder structure:
     │   ├── rooms.json         # rooms configuration
     ├── logs                   # needed for pinojs to work
     ├── src                    # your macro implementation
-    │   ├── EnvironmentData.js # here you have your inject configuration
+    │   ├── environmentData.js # here you have your injected configuration
     │   ├── index.js           # entry point for the macro! this will be built by webpack
     ├── utils                  # utils for macro deployer
     ├── execute.js             # entry point of the cli
     └── README.md
+
+### Configuration
 
 Inside `data\rooms.json` there is the structure used by the macro deployer for room configuration. 
 
@@ -91,6 +93,104 @@ Inside `data\rooms.json` there is the structure used by the macro deployer for r
         }
     }
 ]
+
 ```
 
-You can customize everything inside `additionalDetails` to suit your own needs. 
+You can customize everything inside `additionalDetails` to suit your own needs.
+
+We can configure next webpack to take those details and inject them inside the `process.env`, you can do that inside `\src\environmentData.js` there's a method you can customize:
+
+```javascript
+    // inside environment configuration we can put every custom field we want
+    export const  getCustomRoomEnvironmentData = (element, publishGuid) => {
+        return {
+            PUBLISH_IDENTIFIER: publishGuid,
+            ROOM_NAME: element.normalizedName,
+
+            // those fields are the same one that are passed from your configuration file
+            FIELD_1: element.additionalDetails.field1,
+            FIELD_2: element.additionalDetails.field2,
+        };
+    }
+```
+
+`FIELD_1` and `FIELD_2` are custom fields we take from our `additionalDetails` object inside our configuration file.
+
+
+### Develop your macro
+
+Inside `\src\index.js` you can develop your custom macro. In the same folder you'll find a file named `environmentData.js`.
+
+```javascript
+    export const PUBLISH_IDENTIFIER = process.env.PUBLISH_IDENTIFIER;
+    export const ROOM_NAME = process.env.ROOM_NAME;
+
+    export const AMAZING_FEATURE_ENABLED_ONE = process.env.FIELD_1;
+    export const AMAZING_FEATURE_ENABLED_TWO = process.env.FIELD_2;
+
+    export const dev = process.env.NODE_ENV != 'production';
+```
+
+Inside this file you'll find some standard variables and also you can configure your own based on what you have inside the `additionalDetails`. In this particular example we have:
+
+```javascript
+    export const AMAZING_FEATURE_ENABLED_ONE = process.env.FIELD_1;
+    export const AMAZING_FEATURE_ENABLED_TWO = process.env.FIELD_2;
+```
+
+Those are plain simple javscript const so we can use them inside our macro inside `\src\index.js`:
+
+```javascript
+    setInterval(() => {
+        // We don't see it because we pass field2 equal to false
+        if (AMAZING_FEATURE_ENABLED_TWO) {
+            displayRoomOsAlert(ROOM_NAME, "The feature number two is disabled");
+        }
+    }, 5000);
+
+    setInterval(() => {
+        // We see it because we pass field1 equal to true
+        if (AMAZING_FEATURE_ENABLED_ONE) {
+            displayRoomOsAlert(ROOM_NAME, "The feature number one is enabled!!!");
+        }
+    }, 5000);
+```
+> Remember to import your own consts inside the `index.js` file!
+
+# Deploy your macro
+
+Once we have developed the macro and configured the project to inject the correct variables we can run the software that will deploy the macro to the Cisco Telepresence.
+
+Open the cmd inside the project:
+
+    npm start
+
+> NB: this is just a shorthand to run `execute.js`
+
+At this point you'll be prompted for some information:
+
+    ? File with room data (\..\data\rooms.json)
+    ? Would you like to publish script to the remote (y/N)
+    ? Would you like to minify the script? (y/N)
+
+> By default the path to the configuration is inside data\room.js but you can customize it.
+
+> The default answers to second and third questions are `No`.
+
+Eventually you can also run the script with `--yes` to skip all the question and execute everything with the default configuration:
+
+    npm start --yes
+    or
+    node execute.js --yes
+
+At this point we will find the logs inside the folder and all the info will be also logged inside the console:
+
+    [1647510321368] INFO (18312 on USERNAME): Process started
+    
+    [1647510321369] INFO (18312 on USERNAME): Rooms to configure: ["Room beautiful name 0","Room beautiful name 1"]
+    
+    [1647510321369] INFO (18312 on USERNAME): Processing room: Room beautiful name 0
+    
+    [1647510321369] INFO (18312 on USERNAME): Runnining webpack for: Room beautiful name 0
+
+    ... Omit for brevity
