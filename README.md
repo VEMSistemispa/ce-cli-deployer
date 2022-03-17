@@ -177,7 +177,7 @@ At this point you'll be prompted for some information:
 
 > The default answers to second and third questions are `No`.
 
-Eventually you can also run the script with `--yes` to skip all the question and execute everything with the default configuration:
+You can also run the script with `--yes` to skip all the question and execute everything with the default configuration:
 
     npm start --yes
     or
