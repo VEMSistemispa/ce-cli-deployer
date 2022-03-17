@@ -45,9 +45,9 @@ To start the project after installing the packages with yarn:
 
 This will start the script and you will be prompted with questions to configure the current deployment
 
-> NB: don't delete the **logs** folder. Pino need it to run correctly. You may be prompted with `process exited with 1` otherwise
+> Don't delete the **logs** folder. Pino need it to run correctly. You may be prompted with `process exited with 1` otherwise
 
-# Usage
+# Ho2 to use
 
 The repo provide the structure to develop your own macro. The folder structure: 
 
@@ -165,7 +165,7 @@ Open the cmd inside the project:
 
     npm start
 
-> NB: this is just a shorthand to run `execute.js`
+> This is just a shorthand to run `execute.js`
 
 At this point you'll be prompted for some information:
 
