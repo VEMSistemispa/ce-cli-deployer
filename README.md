@@ -29,4 +29,68 @@ Main npm packages:
 - [chalk](https://github.com/chalk/chalk)
 - [pinojs](https://github.com/pinojs/pino)
 
+# Installation
 
+open cmd:
+
+    git clone https://github.com/VEMSistemispa/ce-cli-deployer.git
+    cd ce-cli-deployer
+    yarn install
+
+> NB: if you don't have yarn installed you may follow [this guide](https://yarnpkg.com/getting-started/install) to install it
+
+To start the project after installing the packages with yarn:
+
+    npm start
+
+This will start the script and you will be prompted with questions to configure the current deployment
+
+> NB: don't delete the **logs** folder. Pino need it to run correctly. You may be prompted with `process exited with 1` otherwise
+
+# Usage
+
+The repo provide the structure to develop your own macro. The folder structure: 
+
+    .
+    ├── cli                    # the cli implementaion         
+    ├── data
+    │   ├── rooms.json         # rooms configuration
+    ├── logs                   # needed for pinojs to work
+    ├── src                    # your macro implementation
+    │   ├── EnvironmentData.js # here you have your inject configuration
+    │   ├── index.js           # entry point for the macro! this will be built by webpack
+    ├── utils                  # utils for macro deployer
+    ├── execute.js             # entry point of the cli
+    └── README.md
+
+Inside `data\rooms.json` there is the structure used by the macro deployer for room configuration. 
+
+```json
+[
+    {
+        // if we should consider this room in this build
+        "deploy": true,
+
+        // readable name of the room 
+        // (will be injected inside the script)
+        "name": "Room beautiful name",
+
+        // room identifier
+        "normalizedName": "room_name_or_id",
+
+        // Cisco Telepresence station data
+        // DO NOT STORE REAL CREDENTIALS INSIDE A REPO
+        "ip": "1.1.1.1",
+        "ciscoUser": "JhonDoe",
+        "ciscoPassword": "SuperSecretPassword",
+
+        // Fields you can customize to inject inside the script
+        "additionalDetails": {
+            "field1": true,
+            "field2": false
+        }
+    }
+]
+```
+
+You can customize everything inside `additionalDetails` to suit your own needs. 
