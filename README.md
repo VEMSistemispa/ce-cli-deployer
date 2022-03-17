@@ -67,7 +67,7 @@ The repo provide the structure to develop your own macro. The folder structure:
 
 Inside `data\rooms.json` there is the structure used by the macro deployer for room configuration. 
 
-```json
+```javascript
 [
     {
         // if we should consider this room in this build
@@ -186,7 +186,7 @@ Eventually you can also run the script with `--yes` to skip all the question and
 At this point we will find the logs inside the folder and all the info will be also logged inside the console:
 
     [1647510321368] INFO (18312 on USERNAME): Process started
-    
+
     [1647510321369] INFO (18312 on USERNAME): Rooms to configure: ["Room beautiful name 0","Room beautiful name 1"]
     
     [1647510321369] INFO (18312 on USERNAME): Processing room: Room beautiful name 0
