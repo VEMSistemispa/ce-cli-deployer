@@ -193,4 +193,4 @@ At this point we will find the logs inside the folder and all the info will be a
     
     [1647510321369] INFO (18312 on USERNAME): Runnining webpack for: Room beautiful name 0
 
-    ... Omit for brevity
+    ... Omitted for brevity
