@@ -49,7 +49,7 @@ This will start the script and you will be prompted with questions to configure 
 
 > Don't delete the **logs** folder. Pino need it to run correctly. You may be prompted with `process exited with 1` otherwise
 
-# Ho2 to use
+# How to use
 
 The repo provide the structure to develop your own macro. The folder structure: 
 
